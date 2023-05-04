@@ -3,8 +3,12 @@ package com.verygoodsecurity.vgsshow.widget
 import android.content.Context
 import android.os.Parcelable
 import android.util.AttributeSet
+import android.util.Base64
+import androidx.annotation.MainThread
 import com.github.barteksc.pdfviewer.PDFView
 import com.verygoodsecurity.vgsshow.R
+import com.verygoodsecurity.vgsshow.core.network.model.data.response.VGSShowResponse
+import com.verygoodsecurity.vgsshow.util.extension.logWaring
 import com.verygoodsecurity.vgsshow.widget.core.VGSFieldType
 import com.verygoodsecurity.vgsshow.widget.core.VGSView
 import com.verygoodsecurity.vgsshow.widget.extension.getStyledAttributes
@@ -124,6 +128,17 @@ class VGSPDFView @JvmOverloads constructor(
      */
     fun refresh() {
         documentBytes?.let { render(it) }
+    }
+
+    @MainThread
+    fun setVGSShowResponse(response: VGSShowResponse) {
+        if (ignoreField) return
+
+        val key = getContentPath()
+
+        response.data.getValue(key)
+            ?.let { revealedData -> render(Base64.decode(revealedData, Base64.NO_WRAP)) }
+            ?: logWaring("Cannot reveal data for contentPaths: $key")
     }
 
     internal fun render(bytes: ByteArray) {

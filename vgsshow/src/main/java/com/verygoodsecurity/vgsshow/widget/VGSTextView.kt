@@ -18,8 +18,10 @@ import androidx.annotation.*
 import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.doOnTextChanged
 import com.verygoodsecurity.vgsshow.R
+import com.verygoodsecurity.vgsshow.core.network.model.data.response.VGSShowResponse
 import com.verygoodsecurity.vgsshow.util.extension.isLollipopOrGreater
 import com.verygoodsecurity.vgsshow.util.extension.isMarshmallowOrGreater
+import com.verygoodsecurity.vgsshow.util.extension.logWaring
 import com.verygoodsecurity.vgsshow.widget.VGSTextView.CopyTextFormat.FORMATTED
 import com.verygoodsecurity.vgsshow.widget.VGSTextView.CopyTextFormat.RAW
 import com.verygoodsecurity.vgsshow.widget.core.VGSFieldType
@@ -426,6 +428,17 @@ class VGSTextView @JvmOverloads constructor(
     fun clearText() {
         setText("")
         rawText = null
+    }
+
+    @MainThread
+    fun setVGSShowResponse(response: VGSShowResponse) {
+        if (ignoreField) return
+
+        val key = getContentPath()
+
+        response.data.getValue(key)
+            ?.let { revealedData -> view.text = revealedData }
+            ?: logWaring("Cannot reveal data for contentPaths: $key")
     }
 
     /**

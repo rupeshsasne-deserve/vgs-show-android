@@ -2,6 +2,7 @@ package com.verygoodsecurity.vgsshow.core.network.model
 
 import com.verygoodsecurity.vgsshow.core.exception.VGSException
 import com.verygoodsecurity.vgsshow.core.network.model.data.response.ResponseData
+import com.verygoodsecurity.vgsshow.core.network.model.data.response.VGSShowResponse
 
 /**
  * The base class definition for a VGSShow response states.
@@ -19,14 +20,14 @@ sealed class VGSResponse {
      */
     class Success private constructor(
         override val code: Int,
-        internal val data: ResponseData
+        val vgsShowResponse: VGSShowResponse
     ) : VGSResponse() {
 
         override fun toString() = "Code: $code"
 
         internal companion object {
 
-            fun create(code: Int, data: ResponseData) = Success(code, data)
+            fun create(code: Int, data: ResponseData) = Success(code, VGSShowResponse(data))
         }
     }
 

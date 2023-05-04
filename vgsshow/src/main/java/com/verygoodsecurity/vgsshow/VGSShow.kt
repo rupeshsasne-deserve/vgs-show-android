@@ -183,7 +183,7 @@ class VGSShow private constructor(
                 logRequestEvent(request)
                 with(proxyRequestManager.execute(request)) {
                     logResponseEvent(this)
-                    mainHandler.post { viewsStore.update((this as? VGSResponse.Success)?.data) }
+                    mainHandler.post { viewsStore.update((this as? VGSResponse.Success)?.vgsShowResponse?.data) }
                     this
                 }
             }
@@ -405,7 +405,7 @@ class VGSShow private constructor(
 
     private fun handleResponse(response: VGSResponse) {
         mainHandler.post {
-            viewsStore.update((response as? VGSResponse.Success)?.data)
+            viewsStore.update((response as? VGSResponse.Success)?.vgsShowResponse?.data)
             notifyResponseListeners(response)
         }
     }
